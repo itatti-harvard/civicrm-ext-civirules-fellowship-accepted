@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project follows Semantic Versioning.
 
+## [1.0.4] - 2026-09-22
+### Changed
+- GitHub workflows use `actions/checkout` v7 and `actions/upload-artifact` v7 (Node 24 runtime).
+- Dependabot groups GitHub Actions updates into a single PR per run.
+
 ## [1.0.3] - 2026-09-22
 ### Changed
 - Verified compatibility with CiviCRM 6.17.3 on PHP 8.4 (release notes 6.14.0 through 6.18.1 reviewed; no code changes required).
