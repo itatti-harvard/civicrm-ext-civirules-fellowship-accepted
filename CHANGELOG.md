@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project follows Semantic Versioning.
 
+## [1.0.3] - 2026-09-22
+### Changed
+- Verified compatibility with CiviCRM 6.17.3 on PHP 8.4 (release notes 6.14.0 through 6.18.1 reviewed; no code changes required).
+- CI now lints and packages on PHP 8.3 and 8.4.
+
+### Fixed
+- GitHub workflows use only GitHub-owned actions and the `gh` CLI, so they run under the organisation's Actions policy.
+- Release package no longer includes the `.git` pointer file or local `.context` directory.
+
+## [1.0.2] - 2026-02-06
+### Fixed
+- Removed extra arguments from civix install/enable helpers that caused an `ArgumentCountError` on install and enable.
+
 ## [1.0.1] - 2026-02-06
 ### Added
 - GitHub workflow to auto-create a release when `info.xml` version changes on `main`.

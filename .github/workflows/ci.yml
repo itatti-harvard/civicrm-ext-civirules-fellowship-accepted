@@ -8,16 +8,19 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.3', '8.4']
+    # Official PHP image instead of a third-party setup action: the org's
+    # Actions policy only allows GitHub-owned actions.
+    container: php:${{ matrix.php }}-cli
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup PHP 8.3
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          coverage: none
+      - name: Install build tools
+        run: apt-get update -qq && apt-get install -y -qq rsync zip >/dev/null
 
       - name: Validate metadata files
         run: |
@@ -33,5 +36,5 @@ jobs:
       - name: Upload package artifact
         uses: actions/upload-artifact@v6
         with:
-          name: civicrm-extension-package
+          name: civicrm-extension-package-php${{ matrix.php }}
           path: dist/*.zip
