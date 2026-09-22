@@ -8,15 +8,18 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.3', '8.4']
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup PHP 8.3
+      - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: ${{ matrix.php }}
           coverage: none
 
       - name: Validate metadata files
@@ -33,5 +36,5 @@ jobs:
       - name: Upload package artifact
         uses: actions/upload-artifact@v6
         with:
-          name: civicrm-extension-package
+          name: civicrm-extension-package-php${{ matrix.php }}
           path: dist/*.zip
