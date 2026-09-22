@@ -41,8 +41,9 @@ rm -rf "$STAGE_DIR"
 mkdir -p "$OUTPUT_DIR" "$STAGE_DIR"
 
 rsync -a \
-  --exclude='.git/' \
+  --exclude='.git' \
   --exclude='.github/' \
+  --exclude='.context/' \
   --exclude='dist/' \
   --exclude='vendor/' \
   --exclude='*.zip' \

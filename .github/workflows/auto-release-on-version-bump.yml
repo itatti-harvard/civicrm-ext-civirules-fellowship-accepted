@@ -16,15 +16,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
-      - name: Setup PHP 8.3
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          coverage: none
 
       - name: Resolve version metadata
         id: meta
@@ -75,18 +69,16 @@ jobs:
 
       - name: Upload package artifact
         if: steps.meta.outputs.should_release == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: auto-release-${{ steps.meta.outputs.tag }}
           path: dist/*.zip
 
       - name: Create GitHub Release
         if: steps.meta.outputs.should_release == 'true'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.meta.outputs.tag }}
-          target_commitish: ${{ github.sha }}
-          generate_release_notes: true
-          prerelease: false
-          files: |
-            dist/*.zip
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.meta.outputs.tag }}" dist/*.zip \
+            --target "${{ github.sha }}" \
+            --generate-notes

@@ -49,12 +49,6 @@ jobs:
         with:
           ref: ${{ steps.meta.outputs.tag }}
 
-      - name: Setup PHP 8.3
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          coverage: none
-
       - name: Validate tag and extension version
         run: |
           XML_VERSION="$(php -r '$xml = simplexml_load_file("info.xml"); if (!$xml) { fwrite(STDERR, "Invalid info.xml\n"); exit(1);} echo trim((string) $xml->version);')"
@@ -79,10 +73,12 @@ jobs:
           path: dist/*.zip
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.meta.outputs.tag }}
-          generate_release_notes: true
-          prerelease: ${{ steps.meta.outputs.prerelease == 'true' }}
-          files: |
-            dist/*.zip
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXTRA=()
+          if [[ "${{ steps.meta.outputs.prerelease }}" == "true" ]]; then
+            EXTRA+=(--prerelease)
+          fi
+          gh release create "${{ steps.meta.outputs.tag }}" dist/*.zip \
+            --generate-notes "${EXTRA[@]}"
